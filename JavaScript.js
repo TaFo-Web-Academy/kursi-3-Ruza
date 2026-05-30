@@ -259,7 +259,7 @@
         html += '<strong>Рӯзи 3:</strong> Чӣ гуна ба худ баргардам ва дигар аз тарс интихоб накунам?';
         html += '</p>';
         html += '<div style="margin-top:24px;">';
-        html += '<button class="btn btn-primary" id="btnAdmin" style="font-size:1.05rem;padding:16px 40px;">Ворид шудан ба 3 рӯзи ройгон</button>';
+        html += '<button class="btn btn-primary" id="btnAdmin" style="font-size:1.05rem;padding:16px 40px;">Ворид шудан ба Дарси 3 рӯза</button>';
         html += '</div>';
         html += '<div class="inline-flex-wrap mt-16">';
         html += '<a href="https://t.me/Jannat_Abdullaeva_Kanal" target="_blank" class="btn btn-telegram" style="font-size:0.9rem; display: inline-flex; align-items: center; justify-content: center; gap: 8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42 10.532-6.645c.498-.303.953-.14.578.192l-8.533 7.701-.33 4.955c.488 0 .703-.223.976-.485l2.344-2.279 4.875 3.6c.898.496 1.543.24 1.768-.83l3.195-15.059c.328-1.313-.502-1.91-1.361-1.514z"/></svg>Телеграм Канал</a>';
