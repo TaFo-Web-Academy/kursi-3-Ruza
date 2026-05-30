@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="tg">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Психологический тест — Ба ман чӣ намерасад?</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Background atmosphere -->
+    <div class="bg-atmosphere" aria-hidden="true">
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+    </div>
+
+    <!-- App container -->
+    <div class="app-container" id="appContainer">
+
+        <!-- ==================== SECTION: HERO ==================== -->
+        <section class="section active" id="sectionHero">
+            <div class="card-emotional text-center" style="padding: 48px 30px;">
+                <h1 class="hero-headline">«Ба ман чӣ намерасад, ки ман дар муносибат худро гум мекунам?»</h1>
+                <p class="hero-subheadline">
+                    Тести психологӣ, ки ба ту кӯмак мекунад фаҳмӣ:<br>
+                    ту муносибатро аз рӯи муҳаббат интихоб мекунӣ<br>
+                    ё аз холигии дарун,<br>
+                    тарс<br>
+                    ва эҳтиёҷ ба наҷот ёфтан.
+                </p>
+                <button class="btn btn-primary" id="btnStartHero" style="margin-top: 8px;">
+                    Оғози тест
+                </button>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION: INTRO ==================== -->
+        <section class="section" id="sectionIntro">
+            <div class="card-emotional text-center" style="padding: 44px 28px;">
+                <p style="font-size:1.15rem;font-weight:460;color:#2a2826;line-height:1.5;margin-bottom:20px;">
+                    «Рост ҷавоб деҳ.<br>
+                    Ин тест барои "идеально ҷавоб додан" нест.<br>
+                    Ин тест барои бедор шудан аст.»
+                </p>
+                <div class="soft-divider"></div>
+                <p style="font-size:0.95rem;color:#6b6b6b;line-height:1.6;margin-bottom:6px;">
+                    0 — не, ба ман монанд нест
+                </p>
+                <p style="font-size:0.95rem;color:#6b6b6b;line-height:1.6;margin-bottom:6px;">
+                    1 — баъзан мешавад
+                </p>
+                <p style="font-size:0.95rem;color:#6b6b6b;line-height:1.6;margin-bottom:6px;">
+                    2 — бисёр вақт ҳамин хелам
+                </p>
+                <p style="font-size:0.95rem;color:#6b6b6b;line-height:1.6;margin-bottom:24px;">
+                    3 — қариб ҳамеша ҳамин ҳолат дорам
+                </p>
+                <button class="btn btn-primary" id="btnStartTest">
+                    Оғози тест
+                </button>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION: TEST ==================== -->
+        <section class="section" id="sectionTest">
+            <div style="margin-bottom:16px; text-align: left;">
+                <button class="btn btn-outline" id="btnBack" style="font-size:0.9rem;padding:9px 22px;">&#8592; Қафо</button>
+            </div>
+            <div class="progress-label" id="progressLabel">Саволи 1 аз 15</div>
+            <div class="progress-wrap">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="card" id="questionCard"
+                style="min-height: 280px;display:flex;flex-direction:column;justify-content:center;">
+                <div class="question-counter" id="questionCounter">Саволи 1 аз 15</div>
+                <p class="question-text" id="questionText"></p>
+                <div class="answers-grid" id="answersGrid"></div>
+            </div>
+        </section>
+
+        <!-- ==================== SECTION: RESULTS ==================== -->
+        <section class="section" id="sectionResults">
+            <div id="resultsContent"></div>
+        </section>
+
+    </div>
+
+    <script src="JavaScript.js"></script>
+</body>
+
+</html>
