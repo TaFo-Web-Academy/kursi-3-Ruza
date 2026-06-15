@@ -1,12 +1,13 @@
 (function () {
     // ==================== APP STATE ====================
     const state = {
-        currentSection: 'sectionHero',
+        currentSection: 'sectionAuth',
         currentQuestionIndex: 0,
         answers: new Array(15).fill(null),
         totalScore: 0,
         blockScores: [0, 0, 0, 0, 0],
         transitioning: false,
+        currentUser: { name: '', age: '' }
     };
 
     // ==================== QUESTIONS DATA ====================
@@ -34,6 +35,7 @@
 
     // ==================== DOM REFS ====================
     const appContainer = document.getElementById('appContainer');
+    const sectionAuth = document.getElementById('sectionAuth');
     const sectionHero = document.getElementById('sectionHero');
     const sectionIntro = document.getElementById('sectionIntro');
     const sectionTest = document.getElementById('sectionTest');
@@ -47,6 +49,9 @@
     const btnStartHero = document.getElementById('btnStartHero');
     const btnStartTest = document.getElementById('btnStartTest');
     const btnBack = document.getElementById('btnBack');
+    const btnAuthSubmit = document.getElementById('btnAuthSubmit');
+    const uNameInput = document.getElementById('u-name');
+    const uAgeInput = document.getElementById('u-age');
 
     // ==================== HELPER: Switch Section ====================
     function switchSection(fromId, toId, callback) {
@@ -318,6 +323,38 @@
     }
 
     // ==================== EVENT BINDINGS ====================
+    btnAuthSubmit.addEventListener('click', function () {
+        const nameVal = uNameInput.value.trim();
+        const ageVal = uAgeInput.value.trim();
+
+        if (!nameVal || !ageVal) {
+            uNameInput.style.borderColor = !nameVal ? 'var(--accent)' : 'var(--accent-soft)';
+            uAgeInput.style.borderColor = !ageVal ? 'var(--accent)' : 'var(--accent-soft)';
+            return;
+        }
+
+        uNameInput.style.borderColor = 'var(--accent-soft)';
+        uAgeInput.style.borderColor = 'var(--accent-soft)';
+
+        state.currentUser.name = nameVal;
+        state.currentUser.age = ageVal;
+
+        // Customize the hero headline with the user's name
+        const headlineEl = document.querySelector('#sectionHero .hero-headline');
+        if (headlineEl) {
+            headlineEl.innerHTML = nameVal + ',<br>«Ба ман чӣ намерасад, ки ман дар муносибат худро гум мекунам?»';
+        }
+
+        switchSection('sectionAuth', 'sectionHero');
+    });
+
+    // Enter key support for inputs
+    [uNameInput, uAgeInput].forEach(input => {
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') btnAuthSubmit.click();
+        });
+    });
+
     btnStartHero.addEventListener('click', function () {
         switchSection('sectionHero', 'sectionIntro');
     });
@@ -343,7 +380,7 @@
     if (btnBack) btnBack.addEventListener('click', goBack);
 
     // ==================== INIT ====================
-    sectionHero.classList.add('active');
+    sectionAuth.classList.add('active');
     window.scrollTo({ top: 0, behavior: 'instant' });
     renderQuestion(0);
 
