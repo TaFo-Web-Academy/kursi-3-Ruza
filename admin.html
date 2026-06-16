@@ -248,9 +248,9 @@ tbody td{padding:14px 20px;font-size:13px;color:var(--text);vertical-align:middl
     <!-- Stats -->
     <div class="stats-grid" id="statsGrid">
       <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-val" id="statTotal">—</div><div class="stat-label">Иштирокчиён</div><div class="stat-sub" id="statToday"></div></div>
-      <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-val" id="statAvg">—</div><div class="stat-label">Миёнаи хол</div><div class="stat-sub">аз 75</div></div>
+      <div class="stat-card"><div class="stat-icon">⭐</div><div class="stat-val" id="statAvg">—</div><div class="stat-label">Миёнаи хол</div><div class="stat-sub">аз 45</div></div>
       <div class="stat-card"><div class="stat-icon">🏆</div><div class="stat-val" id="statMax">—</div><div class="stat-label">Беҳтарин хол</div><div class="stat-sub" id="statMaxName"></div></div>
-      <div class="stat-card"><div class="stat-icon">📈</div><div class="stat-val" id="statPassRate">—</div><div class="stat-label">Иштирок баланд</div><div class="stat-sub">≥53 хол</div></div>
+      <div class="stat-card"><div class="stat-icon">📈</div><div class="stat-val" id="statPassRate">—</div><div class="stat-label">Иштирок баланд</div><div class="stat-sub">≥30 хол</div></div>
     </div>
 
     <!-- Charts -->
@@ -259,7 +259,7 @@ tbody td{padding:14px 20px;font-size:13px;color:var(--text);vertical-align:middl
         <div class="chart-head">
           <div>
             <div class="chart-title">Тақсими Холҳо</div>
-            <div class="chart-sub">гистограмм аз 0 то 75</div>
+            <div class="chart-sub">гистограмм аз 0 то 45</div>
           </div>
         </div>
         <div class="chart-wrap"><canvas id="histChart"></canvas></div>
@@ -283,11 +283,10 @@ tbody td{padding:14px 20px;font-size:13px;color:var(--text);vertical-align:middl
       </div>
       <select class="filter-select" id="filterSelect">
         <option value="all">Ҳама натиҷаҳо</option>
-        <option value="low">⚠️ 0–22 хол</option>
-        <option value="midlow">🌱 23–37 хол</option>
-        <option value="mid">🚀 38–52 хол</option>
-        <option value="high">🏅 53–64 хол</option>
-        <option value="top">🏆 65–75 хол</option>
+        <option value="r1">✨ 0–11 хол (Пурра дар капкан нест)</option>
+        <option value="r2">💔 12–23 хол (Захм фаъол аст)</option>
+        <option value="r3">🔄 24–35 хол (Сценарияи такрорӣ)</option>
+        <option value="r4">⚠️ 36–45 хол (Худро гум кардам)</option>
       </select>
       <button class="export-btn" id="exportBtn">
         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
@@ -422,7 +421,7 @@ tbody td{padding:14px 20px;font-size:13px;color:var(--text);vertical-align:middl
     const avg = total ? Math.round(scores.reduce((a,b) => a+b, 0) / total) : 0;
     const max = total ? Math.max(...scores) : 0;
     const maxEntry = allData.find(d => d.score === max);
-    const passRate = total ? Math.round(allData.filter(d => (d.score||0) >= 53).length / total * 100) : 0;
+    const passRate = total ? Math.round(allData.filter(d => (d.score||0) >= 30).length / total * 100) : 0;
 
     // Today count
     const today = new Date();
@@ -444,14 +443,14 @@ tbody td{padding:14px 20px;font-size:13px;color:var(--text);vertical-align:middl
   function renderCharts() {
     // Histogram — buckets by 5
     const buckets = {};
-    for (let i = 0; i <= 75; i += 5) buckets[i] = 0;
+    for (let i = 0; i <= 45; i += 3) buckets[i] = 0;
     allData.forEach(d => {
       const s = d.score || 0;
-      const bucket = Math.floor(s / 5) * 5;
+      const bucket = Math.floor(s / 3) * 3;
       if (buckets[bucket] !== undefined) buckets[bucket]++;
     });
 
-    const histLabels = Object.keys(buckets).map(k => k + '–' + (parseInt(k)+4));
+    const histLabels = Object.keys(buckets).map(k => k + '–' + (parseInt(k)+2));
     const histVals = Object.values(buckets);
 
     if (histChartInst) histChartInst.destroy();
@@ -463,11 +462,11 @@ tbody td{padding:14px 20px;font-size:13px;color:var(--text);vertical-align:middl
           label: 'Нафар',
           data: histVals,
           backgroundColor: histVals.map((_, i) => {
-            const mid = i * 5;
-            if (mid <= 22) return 'rgba(248,113,113,.6)';
-            if (mid <= 37) return 'rgba(251,191,36,.6)';
-            if (mid <= 52) return 'rgba(96,165,250,.6)';
-            return 'rgba(52,211,153,.6)';
+            const mid = i * 3;
+            if (mid <= 11) return 'rgba(167,139,250,.6)';
+            if (mid <= 23) return 'rgba(251,191,36,.6)';
+            if (mid <= 35) return 'rgba(96,165,250,.6)';
+            return 'rgba(248,113,113,.6)';
           }),
           borderRadius: 6,
           borderSkipped: false,
@@ -484,24 +483,23 @@ tbody td{padding:14px 20px;font-size:13px;color:var(--text);vertical-align:middl
     });
 
     // Pie chart — 5 categories
-    const cats = [0, 0, 0, 0, 0];
+    const cats = [0, 0, 0, 0];
     allData.forEach(d => {
       const s = d.score || 0;
-      if (s <= 22) cats[0]++;
-      else if (s <= 37) cats[1]++;
-      else if (s <= 52) cats[2]++;
-      else if (s <= 64) cats[3]++;
-      else cats[4]++;
+      if (s <= 11) cats[0]++;
+      else if (s <= 23) cats[1]++;
+      else if (s <= 35) cats[2]++;
+      else cats[3]++;
     });
 
     if (pieChartInst) pieChartInst.destroy();
     pieChartInst = new Chart(document.getElementById('pieChart'), {
       type: 'doughnut',
       data: {
-        labels: ['0–22 (⚠️)', '23–37 (🌱)', '38–52 (🚀)', '53–64 (🏅)', '65–75 (🏆)'],
+        labels: ['0–11 (✨)', '12–23 (💔)', '24–35 (🔄)', '36–45 (⚠️)'],
         datasets: [{
           data: cats,
-          backgroundColor: ['rgba(248,113,113,.7)', 'rgba(251,191,36,.7)', 'rgba(96,165,250,.7)', 'rgba(52,211,153,.7)', 'rgba(167,139,250,.8)'],
+          backgroundColor: ['rgba(167,139,250,.8)', 'rgba(251,191,36,.7)', 'rgba(96,165,250,.7)', 'rgba(248,113,113,.7)'],
           borderColor: 'transparent',
           hoverOffset: 8
         }]
@@ -525,11 +523,10 @@ tbody td{padding:14px 20px;font-size:13px;color:var(--text);vertical-align:middl
       const name = (d.name || '').toLowerCase();
       if (search && !name.includes(search)) return false;
       const s = d.score || 0;
-      if (filter === 'low' && s > 22) return false;
-      if (filter === 'midlow' && (s < 23 || s > 37)) return false;
-      if (filter === 'mid' && (s < 38 || s > 52)) return false;
-      if (filter === 'high' && (s < 53 || s > 64)) return false;
-      if (filter === 'top' && s < 65) return false;
+      if (filter === 'r1' && s > 11) return false;
+      if (filter === 'r2' && (s < 12 || s > 23)) return false;
+      if (filter === 'r3' && (s < 24 || s > 35)) return false;
+      if (filter === 'r4' && s < 36) return false;
       return true;
     });
 
@@ -556,14 +553,15 @@ tbody td{padding:14px 20px;font-size:13px;color:var(--text);vertical-align:middl
 
     tbody.innerHTML = page.map((d, i) => {
       const score = d.score || 0;
-      const pillClass = score <= 22 ? 'low' : score <= 52 ? 'mid' : 'high';
+      const maxScore = d.maxScore || 45;
+      const pillClass = score <= 11 ? 'low' : score <= 35 ? 'mid' : 'high';
       const ts = d.timestamp ? (d.timestamp.toDate ? d.timestamp.toDate() : new Date(d.timestamp)) : null;
       const dateStr = ts ? ts.toLocaleDateString('ru-RU', { day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit' }) : '—';
       return `<tr onclick="window.openModal('${d.id}')">
         <td style="color:var(--muted);font-size:12px">${start + i + 1}</td>
         <td class="td-name">${escHtml(d.name || '—')}</td>
         <td class="td-age">${d.age ? d.age + ' сол' : '—'}</td>
-        <td><span class="score-pill ${pillClass}">${score} / 75</span></td>
+        <td><span class="score-pill ${pillClass}">${score} / ${maxScore}</span></td>
         <td class="td-result">${escHtml(d.resultTitle || '—')}</td>
         <td class="td-date">${dateStr}</td>
         <td><button class="view-btn" onclick="event.stopPropagation();window.openModal('${d.id}')">Дидан</button></td>
@@ -599,27 +597,29 @@ tbody td{padding:14px 20px;font-size:13px;color:var(--text);vertical-align:middl
     document.getElementById('modalMeta').textContent = (d.age ? d.age + ' сол  •  ' : '') + dateStr;
 
     const score = d.score || 0;
-    const scoreColor = score <= 22 ? 'var(--red)' : score <= 52 ? 'var(--yellow)' : 'var(--green)';
+    const maxScore = d.maxScore || 45;
+    const scoreColor = score <= 11 ? 'var(--red)' : score <= 35 ? 'var(--yellow)' : 'var(--green)';
 
     let html = `
       <div class="modal-score-row">
         <div class="modal-score-big" style="color:${scoreColor}">${score}</div>
         <div class="modal-score-info">
           <div class="modal-score-title">${escHtml(d.resultTitle || '—')}</div>
-          <div class="modal-score-range" style="color:${scoreColor}">${escHtml(d.resultRange || '')}</div>
+          <div class="modal-score-range" style="color:${scoreColor}">${escHtml(d.resultRange || '')} (аз ${maxScore})</div>
         </div>
       </div>`;
 
     // Section scores
     if (d.answers) {
-      const secTitles = ['Иҷрои Дарсҳо', 'Фаҳмиш ва Ба Хотир Гирифтан', 'Ҳолати Рӯҳӣ ва Эҳсос', 'Амал дар Зиндагӣ', 'Фоидаҳое, ки Ман Гирифтам'];
-      html += `<div class="modal-section"><div class="modal-sec-head">25 Саволи Асосӣ</div>`;
+      const secMaxPerBlock = 9; // 3 questions × max 3 points each
+      html += `<div class="modal-section"><div class="modal-sec-head">15 Саволи Асосӣ — 5 Блок</div>`;
       Object.keys(d.answers).forEach((key, idx) => {
         const sec = d.answers[key];
         const secScore = (sec.scores || []).reduce((a,b) => a + (b||0), 0);
+        const secMax = sec.scores ? sec.scores.length * 3 : secMaxPerBlock;
         html += `<div class="modal-q-row">
-          <div class="modal-q-text">${escHtml(sec.title || secTitles[idx] || key)}</div>
-          <div class="modal-q-score">${secScore}/15</div>
+          <div class="modal-q-text">${escHtml(sec.title || key)}</div>
+          <div class="modal-q-score">${secScore}/${secMax}</div>
         </div>`;
       });
       html += '</div>';
