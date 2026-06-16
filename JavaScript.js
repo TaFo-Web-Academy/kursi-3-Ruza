@@ -137,6 +137,7 @@
                 progressFill.style.width = '100%';
                 progressLabel.textContent = 'Саволи 15 аз 15';
                 calculateResults();
+                saveResultData();
                 state.transitioning = false;
                 switchSection('sectionTest', 'sectionResults', () => {
                     renderResults();
@@ -157,6 +158,39 @@
         state.blockScores[2] = (state.answers[6] || 0) + (state.answers[7] || 0) + (state.answers[8] || 0);
         state.blockScores[3] = (state.answers[9] || 0) + (state.answers[10] || 0) + (state.answers[11] || 0);
         state.blockScores[4] = (state.answers[12] || 0) + (state.answers[13] || 0) + (state.answers[14] || 0);
+    }
+
+    // ==================== SAVE TO FIREBASE ====================
+    function saveResultData() {
+        const score = state.totalScore;
+        const res = getResultData();
+        
+        let rangeStr = "";
+        if (score <= 11) rangeStr = "0–11 хол";
+        else if (score <= 23) rangeStr = "12–23 хол";
+        else if (score <= 35) rangeStr = "24–35 хол";
+        else rangeStr = "36–45 хол";
+
+        // Build answers object per block
+        const answersObj = {
+            sec0: { title: "Холигии дарун", scores: state.answers.slice(0, 3) },
+            sec1: { title: "Мард ҳамчун наҷотдиҳанда", scores: state.answers.slice(3, 6) },
+            sec2: { title: "Сценарияи такрорӣ", scores: state.answers.slice(6, 9) },
+            sec3: { title: "Ҷолибият ва энергия", scores: state.answers.slice(9, 12) },
+            sec4: { title: "Тайёрӣ ба тағйир", scores: state.answers.slice(12, 15) }
+        };
+
+        if (window.saveToFirebase) {
+            window.saveToFirebase({
+                name: state.currentUser.name,
+                age: parseInt(state.currentUser.age, 10) || 0,
+                score: score,
+                maxScore: 45,
+                resultTitle: res.title,
+                resultRange: rangeStr,
+                answers: answersObj
+            });
+        }
     }
 
     function getResultData() {
@@ -326,10 +360,12 @@
     btnAuthSubmit.addEventListener('click', function () {
         const nameVal = uNameInput.value.trim();
         const ageVal = uAgeInput.value.trim();
+        const ageNum = parseInt(ageVal, 10);
+        const isAgeInvalid = !ageVal || isNaN(ageNum) || ageNum < 14 || ageNum > 80;
 
-        if (!nameVal || !ageVal) {
+        if (!nameVal || isAgeInvalid) {
             uNameInput.style.borderColor = !nameVal ? 'var(--accent)' : 'var(--accent-soft)';
-            uAgeInput.style.borderColor = !ageVal ? 'var(--accent)' : 'var(--accent-soft)';
+            uAgeInput.style.borderColor = isAgeInvalid ? 'var(--accent)' : 'var(--accent-soft)';
             return;
         }
 
@@ -337,7 +373,7 @@
         uAgeInput.style.borderColor = 'var(--accent-soft)';
 
         state.currentUser.name = nameVal;
-        state.currentUser.age = ageVal;
+        state.currentUser.age = ageNum;
 
         // Customize the hero headline with the user's name
         const headlineEl = document.querySelector('#sectionHero .hero-headline');

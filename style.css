@@ -568,3 +568,41 @@ body {
     .question-text { font-size: 0.98rem; }
     .btn-answer { padding: 12px 14px; font-size: 0.88rem; }
 }
+
+/* Saving indicator toast styling */
+.saving-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--card-bg);
+    border: 1.5px solid var(--accent-soft);
+    border-radius: var(--radius-sm);
+    padding: 14px 20px;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow-lg);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+}
+.saving-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+.spin {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(124, 95, 160, 0.2);
+    border-top-color: #7c5fa0;
+    border-radius: 50%;
+    animation: spinToast 0.7s linear infinite;
+    flex-shrink: 0;
+}
+@keyframes spinToast {
+    to { transform: rotate(360deg); }
+}

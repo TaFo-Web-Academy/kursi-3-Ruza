@@ -110,9 +110,61 @@
             <div id="resultsContent"></div>
         </section>
 
+    <div class="saving-toast" id="savingToast">
+        <div class="spin"></div>
+        <span id="toastMsg">Натиҷа сабт мешавад...</span>
     </div>
 
     <script src="JavaScript.js"></script>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDzQYZ58CWvKQka376gq1hp0GEy59mIBgc",
+            authDomain: "kursi-3ruza.firebaseapp.com",
+            projectId: "kursi-3ruza",
+            storageBucket: "kursi-3ruza.firebasestorage.app",
+            messagingSenderId: "330882622592",
+            appId: "1:330882622592:web:efe6d166bcfb079d42b265",
+            measurementId: "G-VR4ZHDCL3V"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Expose saveToFirebase globally
+        window.saveToFirebase = async function(data) {
+            try {
+                showToast('Натиҷа сабт мешавад...', true);
+                await addDoc(collection(db, "test_results"), {
+                    ...data,
+                    timestamp: serverTimestamp()
+                });
+                showToast('✓ Сабт шуд!', false);
+                setTimeout(() => hideToast(), 2500);
+            } catch(e) {
+                console.error("Firebase error:", e);
+                showToast('⚠️ Хатогӣ дар сабт', false);
+                setTimeout(() => hideToast(), 3000);
+            }
+        };
+
+        function showToast(msg, spinning) {
+            const toast = document.getElementById('savingToast');
+            const msgEl = document.getElementById('toastMsg');
+            const spin = toast.querySelector('.spin');
+            if (msgEl) msgEl.textContent = msg;
+            if (spin) spin.style.display = spinning ? 'block' : 'none';
+            if (toast) toast.classList.add('show');
+        }
+        function hideToast() {
+            const toast = document.getElementById('savingToast');
+            if (toast) toast.classList.remove('show');
+        }
+    </script>
 </body>
 
 </html>
